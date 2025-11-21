@@ -1,7 +1,9 @@
 # SmartSpend
-Consumers often face multiple platform choices (e.g., Amazon, Flipkart, BigBasket and many marketplace websites) when purchasing a product. Prices, delivery charges and delivery time vary across platforms, making manual comparison inefficient and time-consuming.
+This project helps a user choose the best e-commerce platform for purchasing a given product based on their personal preferences.
 
-This project aims to build an optimization model that identifies the best purchasing platform for a given product by minimizing the total cost while satisfying user preferences (e.g. reasonable cost, delivery speed, platform rating etc.). The system will allow users to assign weights to different factors and compute the optimal platform automatically.
+The user enters weights for different criteria (like price, delivery charge, discount, delivery time, rating, return policy), and the optimization model selects the platform that best fits the user’s priorities.
+
+Optimization is performed using Mixed-Integer Linear Program (MILP) implemented with Python + PuLP.
 
 ## Team Name: Team Akshar
 
