@@ -19,7 +19,7 @@ git clone https://github.com/Aks27-hub/SmartSpend
 
 cd SmartSpend
 
-pip install pandas numpy pulp
+pip install pandas numpy pulp (if not already installed in your system)
 
 python opt_prj_code.py
 
