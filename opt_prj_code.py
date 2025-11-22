@@ -2,8 +2,13 @@ import pandas as pd
 import numpy as np
 import pulp
 
+""" 
+----------------------------
+It is assumed for this project that a single product has to be purchased
+----------------------------
+"""
 
-# PLATFORM DATA
+# get PLATFORM DATA
 def platform_data():
     data = [
         {"platform":"Amazon",   "price":2750, "delivery":120, "discount":150, "delivery_days":4, "rating":4.2, "return_score":0.83},
@@ -92,18 +97,13 @@ def main():
         print("Weights cannot be all zero. Using equal weights (all 1).")
         raw_weights = np.ones(6)
 
+    # normalized weights
     w_norm = raw_weights / raw_weights.sum()
 
-    weights = {
-        "w_price": w_norm[0],
-        "w_delivery": w_norm[1],
-        "w_discount": w_norm[2],
-        "w_time": w_norm[3],
-        "w_rating": w_norm[4],
-        "w_return": w_norm[5]
-    }
+    weights = {"w_price": w_norm[0], "w_delivery": w_norm[1], "w_discount": w_norm[2],
+               "w_time": w_norm[3], "w_rating": w_norm[4], "w_return": w_norm[5]}
 
-    print("\nNormalized weights used:", weights)
+    print("\nNormalized weights:", weights)
 
     # Prepare data & compute cost
     df_norm = make_dataframe(df)
