@@ -23,3 +23,13 @@ pip install pandas numpy pulp (if not already installed in your system)
 
 python opt_prj_code.py
 
+## Demo:
+The script prompts the user for:
+
+Weights for each attribute.
+
+Then computes cost coefficients,
+
+Passes them to the MILP solver,
+
+The solver selects exactly one platform.
