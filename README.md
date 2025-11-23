@@ -7,7 +7,7 @@ Optimization is performed using Mixed-Integer Linear Program (MILP) implemented 
 
 ## Team Name: Team Akshar
 
-## Team Members: Akshar Singhal
+## Team Members: Akshar Singhal (BT2024229)
 
 ## Project Title: Optimize purchase of Goods
 
