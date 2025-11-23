@@ -11,18 +11,18 @@ It is assumed for this project that a single product has to be purchased
 # get PLATFORM DATA
 def platform_data():
     data = [
-        {"platform":"Amazon",   "price":2750, "delivery":120, "discount":150, "delivery_days":4, "rating":4.2, "return_score":0.83},
-        {"platform":"Flipkart", "price":2400, "delivery":60,  "discount":80,  "delivery_days":3, "rating":4.3, "return_score":0.86},
-        {"platform":"Meesho",   "price":1850, "delivery":140, "discount":50,  "delivery_days":6, "rating":3.8, "return_score":0.70},
-        {"platform":"Croma",    "price":3100, "delivery":70,   "discount":20,  "delivery_days":2, "rating":4.6, "return_score":0.89},
-        {"platform":"JioMart",  "price":2250, "delivery":130, "discount":200, "delivery_days":5, "rating":3.9, "return_score":0.77},
-        {"platform":"Myntra",   "price":2950, "delivery":90,  "discount":280, "delivery_days":5, "rating":4.4, "return_score":0.82},
-        {"platform":"Blinkit",  "price":2600, "delivery":30,  "discount":70,  "delivery_days":1, "rating":4.0, "return_score":0.79}
+        {"platform":"Amazon",   "price":2750, "delivery_fee":120, "discount":150, "delivery_days":4, "rating":4.2, "return_score":0.83},
+        {"platform":"Flipkart", "price":2400, "delivery_fee":60,  "discount":80,  "delivery_days":3, "rating":4.3, "return_score":0.86},
+        {"platform":"Meesho",   "price":1850, "delivery_fee":140, "discount":50,  "delivery_days":6, "rating":3.8, "return_score":0.70},
+        {"platform":"Croma",    "price":3100, "delivery_fee":70,   "discount":20,  "delivery_days":2, "rating":4.6, "return_score":0.89},
+        {"platform":"JioMart",  "price":2250, "delivery_fee":130, "discount":200, "delivery_days":5, "rating":3.9, "return_score":0.77},
+        {"platform":"Myntra",   "price":2950, "delivery_fee":90,  "discount":280, "delivery_days":5, "rating":4.4, "return_score":0.82},
+        {"platform":"Blinkit",  "price":2600, "delivery_fee":30,  "discount":70,  "delivery_days":1, "rating":4.0, "return_score":0.79}
     ]
     return pd.DataFrame(data)
 
 
-# NORMALIZATION
+# min-max NORMALIZATION
 def normalize(series):
     mini = series.min()
     maxi = series.max()
@@ -31,10 +31,11 @@ def normalize(series):
     return (series - mini) / (maxi - mini)
 
 
+# make a new normalized dataframe from old dataframe
 def make_dataframe(df):
     df2 = df.copy().reset_index(drop=True)
     df2["price_n"] = normalize(df2["price"])
-    df2["delivery_n"] = normalize(df2["delivery"])
+    df2["delivery_n"] = normalize(df2["delivery_fee"])
     df2["discount_n"] = normalize(df2["discount"])
     df2["time_n"] = normalize(df2["delivery_days"])
     df2["rating_n"] = normalize(df2["rating"])
@@ -47,10 +48,6 @@ def compute_cost_coeff(df, w):
     df["cost_coeff"] = ( w["w_price"] * df["price_n"] + w["w_delivery"] * df["delivery_n"] +
                         w["w_time"] * df["time_n"] - w["w_discount"] * df["discount_n"] -
                         w["w_rating"] * df["rating_n"] - w["w_return"] * df["return_n"] )
-
-    mini = df["cost_coeff"].min()
-    if mini < 0:
-        df["cost_coeff"] = df["cost_coeff"] - mini
 
     return df
 
@@ -110,7 +107,7 @@ def main():
     df_coeff = compute_cost_coeff(df_norm, weights)
 
     print("\nPlatform data with cost coefficients:")
-    print(df_coeff[["platform", "cost_coeff", "price", "delivery", "discount",
+    print(df_coeff[["platform", "cost_coeff", "price", "delivery_fee", "discount",
                     "delivery_days", "rating", "return_score"]])
 
     # Solve MILP
@@ -121,8 +118,9 @@ def main():
         print("\n=== BEST PLATFORM SELECTED ===")
         print("Platform:", chosen["platform"])
         print("\nDetails:")
-        for k, v in chosen.items():
-            print(f"{k}: {v}")
+        for i, j in chosen.items():
+            if (not i.endswith('n') and not i.startswith('cost')):
+                print(f"{i}: {j}")
     else:
         print("\nNo platform satisfies the constraints.")
 
